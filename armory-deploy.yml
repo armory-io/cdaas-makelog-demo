@@ -77,19 +77,19 @@ targets: #This section defines the targets to which you are deploying, and their
     namespace: borealis-staging
     strategy: rolling
 manifests: #This section defines the Manifests you are deploying, by default they reach all targets, but you can specify certain targets if needed.
-  - path: /manifests/potato-facts.yml
-  - path: /manifests/potato-facts-external-service.yml
+  - path: manifests/potato-facts.yml
+  - path: manifests/potato-facts-external-service.yml
     targets:
       - prod-west
       - prod-eu
       - prod-east
-  - path: /manifests/potato-facts-internal-service.yml
+  - path: manifests/potato-facts-internal-service.yml
     targets:
       - dev
       - staging
       - infosec
       - prod-eu
-  - path: /manifests/potato-lies.yml
+  - path: manifests/potato-lies.yml
 strategies: #This section defines the strategies environments can use to deploy.
   myBlueGreen:
     blueGreen:
@@ -257,7 +257,6 @@ webhooks: #Webhooks can be used to run external automation.
         "locator": {
           "pull_request": {
             "head_sha": "{{context.GITHUB_SHA}}"
-      ##      "url": "https://github.com/armory-io/js-monorepo/pull/316",
             "environmentUrl": "{{armory.preview.potato-facts-internal}}"
           }
         },
