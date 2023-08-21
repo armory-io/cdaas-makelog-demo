@@ -291,7 +291,8 @@ webhooks: #Webhooks can be used to run external automation.
         {
         "locator": {
           "pull_request": {
-            "url": "https://github.com/armory-io/js-monorepo/pull/316",
+            "head_sha": "{{context.GITHUB_SHA}}"
+      ##      "url": "https://github.com/armory-io/js-monorepo/pull/316",
             "environmentUrl": "{{armory.preview.potato-facts-internal}}"
           }
         },
