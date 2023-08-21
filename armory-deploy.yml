@@ -25,16 +25,11 @@ targets: #This section defines the targets to which you are deploying, and their
   prod-east:
     account: demo-prod-west-cluster
     constraints:
-      afterDeployment:
-        - runWebhook:
-            name: Send_Slack_Deployment_Complete
       beforeDeployment:
         - pause:
             requiresRoles:
               - Organization Admin
             untilApproved: true
-        - runWebhook:
-            name: Send_Slack_Deployment_Approval_Required
       dependsOn:
         - infosec
         - staging
@@ -45,16 +40,12 @@ targets: #This section defines the targets to which you are deploying, and their
     constraints:
       afterDeployment:
         - runWebhook:
-            name: Send_Slack_Deployment_Complete
-        - runWebhook:
             name: update_change_feed
       beforeDeployment:
         - pause:
             requiresRoles:
               - Organization Admin
             untilApproved: true
-        - runWebhook:
-            name: Send_Slack_Deployment_Approval_Required
       dependsOn:
         - infosec
         - staging
@@ -63,16 +54,11 @@ targets: #This section defines the targets to which you are deploying, and their
   prod-west:
     account: demo-prod-west-cluster
     constraints:
-      afterDeployment:
-        - runWebhook:
-            name: Send_Slack_Deployment_Complete
       beforeDeployment:
         - pause:
             requiresRoles:
               - Organization Admin
             untilApproved: true
-        - runWebhook:
-            name: Send_Slack_Deployment_Approval_Required
       dependsOn:
         - infosec
         - staging
@@ -265,27 +251,6 @@ webhooks: #Webhooks can be used to run external automation.
     name: Integration_Tests
     retryCount: 3
     uriTemplate: https://api.github.com/repos/{{secrets.github_org}}/{{secrets.github_repository}}/dispatches
-  - bodyTemplate:
-      inline: '{ "status_url": "https://console.cloud.armory.io/deployments/{{armory.deploymentId}}", "message": "Deployment of {{armory.applicationName}} to {{armory.environmentName}} is starting." }'
-    disableCallback: true
-    method: POST
-    name: Send_Slack_Deployment_Starting
-    retryCount: 3
-    uriTemplate: '{{secrets.slackwebhookURL}}'
-  - bodyTemplate:
-      inline: '{ "status_url": "https://console.cloud.armory.io/deployments/{{armory.deploymentId}}", "message": "Deployment of {{armory.applicationName}} to {{armory.environmentName}} is complete." }'
-    disableCallback: true
-    method: POST
-    name: Send_Slack_Deployment_Complete
-    retryCount: 3
-    uriTemplate: '{{secrets.slackwebhookURL}}'
-  - bodyTemplate:
-      inline: '{ "status_url": "https://console.cloud.armory.io/deployments/{{armory.deploymentId}}", "message": "Deployment of {{armory.applicationName}} to {{armory.environmentName}} requires a manual approval." }'
-    disableCallback: true
-    method: PUT
-    name: Send_Slack_Deployment_Approval_Required
-    retryCount: 3
-    uriTemplate: '{{secrets.slackwebhookURL}}'
   - bodyTemplate:
       inline: |-
         {
