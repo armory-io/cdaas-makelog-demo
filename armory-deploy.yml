@@ -179,8 +179,6 @@ strategies: #This section defines the strategies environments can use to deploy.
             ttl:
               duration: 30
               unit: MINUTES
-        - runWebhook:
-            name: update_change_feed
 analysis: #This section defines queries against your monitoring system that can be used for automated canary analysis.
   defaultMetricProviderName: Stephen-Prometheus
   queries:
