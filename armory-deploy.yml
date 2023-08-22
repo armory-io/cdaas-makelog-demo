@@ -254,12 +254,12 @@ webhooks: #Webhooks can be used to run external automation.
         {
         "locator": {
           "pull_request": {
-            "head_sha": "{{context.GITHUB_SHA}}",
-            "environmentUrl": "{{armory.preview.potato-facts-internal}}"
+            "head_sha": "{{context.GITHUB_SHA}}"
           }
         },
         "data": {
-          "environment": "{{armory.environmentName}}"
+          "environment": "{{armory.environmentName}}",
+          "environmentUrl": "{{armory.preview.potato-facts-internal}}"
         }
         }
     headers:
