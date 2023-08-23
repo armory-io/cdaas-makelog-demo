@@ -60,7 +60,7 @@ targets: #This section defines the targets to which you are deploying, and their
       dependsOn:
         - dev
     namespace: borealis-staging
-    strategy: rolling
+    strategy: staging_strategy
 manifests: #This section defines the Manifests you are deploying, by default they reach all targets, but you can specify certain targets if needed.
   - path: manifests/potato-facts.yml
   - path: manifests/potato-facts-external-service.yml
@@ -153,6 +153,18 @@ strategies: #This section defines the strategies environments can use to deploy.
         - setWeight:
             weight: 100
   rolling:
+    canary:
+      steps:
+        - setWeight:
+            weight: 100
+        - exposeServices:
+            services:
+              - potato-facts-internal
+              - potato-lies-internal
+            ttl:
+              duration: 30
+              unit: MINUTES
+  staging_strategy:
     canary:
       steps:
         - setWeight:
