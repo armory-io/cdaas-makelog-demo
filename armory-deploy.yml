@@ -219,6 +219,7 @@ webhooks: #Webhooks can be used to run external automation.
     name: Check_Logs
     retryCount: 3
     uriTemplate: https://api.github.com/repos/{{secrets.github_org}}/{{secrets.github_repository}}/dispatches
+    disableCallback: false
   - bodyTemplate:
       inline: |-
         { "event_type": "checkLogs", "client_payload": {
@@ -234,6 +235,7 @@ webhooks: #Webhooks can be used to run external automation.
     name: Security_Scanners
     retryCount: 3
     uriTemplate: https://api.github.com/repos/{{secrets.github_org}}/{{secrets.github_repository}}/dispatches
+    disableCallback: false
   - bodyTemplate:
       inline: |-
         { "event_type": "checkLogs", "client_payload": {
@@ -249,6 +251,7 @@ webhooks: #Webhooks can be used to run external automation.
     name: Integration_Tests
     retryCount: 3
     uriTemplate: https://api.github.com/repos/{{secrets.github_org}}/{{secrets.github_repository}}/dispatches
+    disableCallback: false
   - bodyTemplate:
       inline: |-
         {
