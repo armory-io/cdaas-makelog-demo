@@ -254,7 +254,7 @@ webhooks: #Webhooks can be used to run external automation.
         {
         "locator": {
           "pull_request": {
-            "head_sha": "{{context.GITHUB_SHA}}"
+            "merge_commit_sha": "{{context.GITHUB_SHA}}"
           }
         },
         "data": {
