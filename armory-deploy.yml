@@ -70,8 +70,8 @@ targets: #This section defines the targets to which you are deploying, and their
       afterDeployment:
         - runWebhook:
             name: Integration_Tests
-        - runWebhook:
-            name: update_change_feed
+        #- runWebhook:
+        #    name: update_change_feed
       dependsOn:
         - dev
     namespace: borealis-staging
