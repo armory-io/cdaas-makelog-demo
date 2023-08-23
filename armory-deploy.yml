@@ -12,16 +12,6 @@ targets: #This section defines the targets to which you are deploying, and their
       afterDeployment:
         - runWebhook:
             name: update_change_feed
-  infosec:
-    account: demo-staging-cluster
-    constraints:
-      afterDeployment:
-        - runWebhook:
-            name: Security_Scanners
-      dependsOn:
-        - dev
-    namespace: borealis-infosec
-    strategy: rolling
   prod-east:
     account: demo-prod-west-cluster
     constraints:
@@ -31,7 +21,6 @@ targets: #This section defines the targets to which you are deploying, and their
               - Organization Admin
             untilApproved: true
       dependsOn:
-        - infosec
         - staging
     namespace: borealis-prod-east
     strategy: mycanary
@@ -47,7 +36,6 @@ targets: #This section defines the targets to which you are deploying, and their
               - Organization Admin
             untilApproved: true
       dependsOn:
-        - infosec
         - staging
     namespace: borealis-prod-eu
     strategy: myBlueGreen
@@ -60,7 +48,6 @@ targets: #This section defines the targets to which you are deploying, and their
               - Organization Admin
             untilApproved: true
       dependsOn:
-        - infosec
         - staging
     namespace: borealis-prod
     strategy: mycanary
@@ -69,9 +56,7 @@ targets: #This section defines the targets to which you are deploying, and their
     constraints:
       afterDeployment:
         - runWebhook:
-            name: Integration_Tests
-        #- runWebhook:
-        #    name: update_change_feed
+            name: update_change_feed
       dependsOn:
         - dev
     namespace: borealis-staging
@@ -179,6 +164,8 @@ strategies: #This section defines the strategies environments can use to deploy.
             ttl:
               duration: 30
               unit: MINUTES
+        - runWebhook:
+            name: Integration_Tests
 analysis: #This section defines queries against your monitoring system that can be used for automated canary analysis.
   defaultMetricProviderName: Stephen-Prometheus
   queries:
