@@ -115,7 +115,7 @@ trafficManagement: #Traffic management configuration
       - activeService: potato-lies-external
         previewService: potato-lies-internal
     targets:
-      - prod-eu
+      - production
 webhooks: #Webhooks can be used to run external automation.
   - bodyTemplate:
       inline: |-
