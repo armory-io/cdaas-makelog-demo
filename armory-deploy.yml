@@ -53,6 +53,9 @@ strategies: #This section defines the strategies environments can use to deploy.
             queries:
               - avgCPUUsage-pass
             units: seconds
+            rollBackMode: manual
+            rollForwardMode: automatic
+            lookbackMethod: growing
         - exposeServices:
             services:
               - potato-facts-internal
@@ -75,6 +78,9 @@ strategies: #This section defines the strategies environments can use to deploy.
             queries:
               - avgCPUUsage-pass
             units: seconds
+            rollBackMode: manual
+            rollForwardMode: automatic
+            lookbackMethod: growing
   rolling:
     canary:
       steps:
