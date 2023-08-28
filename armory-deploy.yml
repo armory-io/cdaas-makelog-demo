@@ -4,20 +4,22 @@ application: potato-facts
 deploymentConfig:
   keepDeploymentObject: true
 targets: #This section defines the targets to which you are deploying, and their constraints.
-  dev:
-    account: demo-dev-cluster
-    namespace: borealis-dev
-    strategy: rolling
+  staging:
+    account: demo-staging-cluster
     constraints:
       afterDeployment:
         - runWebhook:
             name: update_change_feed
+    namespace: borealis-staging
+    strategy: staging_strategy
   production:
     account: demo-prod-eu-cluster
     constraints:
       afterDeployment:
         - runWebhook:
             name: update_change_feed
+        - runWebhook:
+            name: Send_Slack_Deployment_Complete
       beforeDeployment:
         - pause:
             requiresRoles:
@@ -27,26 +29,18 @@ targets: #This section defines the targets to which you are deploying, and their
         - staging
     namespace: borealis-prod-eu
     strategy: myBlueGreen
-  staging:
-    account: demo-staging-cluster
-    constraints:
-      afterDeployment:
-        - runWebhook:
-            name: update_change_feed
-      dependsOn:
-        - dev
-    namespace: borealis-staging
-    strategy: staging_strategy
 manifests: #This section defines the Manifests you are deploying, by default they reach all targets, but you can specify certain targets if needed.
   - path: manifests/potato-facts.yml
+  - path: manifests/potato-lies.yml
   - path: manifests/potato-facts-external-service.yml
     targets:
       - production
-  - path: manifests/potato-lies.yml
 strategies: #This section defines the strategies environments can use to deploy.
   myBlueGreen:
     blueGreen:
-      redirectTrafficAfter:
+      redirectTrafficAfter:      
+        - runWebhook:
+            name: Send_Slack_Deployment_Starting
         - analysis:
             interval: 10
             numberOfJudgmentRuns: 1
@@ -125,6 +119,29 @@ trafficManagement: #Traffic management configuration
 webhooks: #Webhooks can be used to run external automation.
   - bodyTemplate:
       inline: |-
+        {
+        "locator": {
+          "pull_request": {
+            "merge_commit_sha": "{{context.GITHUB_SHA}}"
+          }
+        },
+        "data": {
+          "environment": "{{armory.environmentName}}",
+          "environmentUrl": "{{armory.preview.potato-facts-internal}}"
+        }
+        }
+    headers:
+      - key: Authorization
+        value: Bearer {{secrets.makelog-token}}
+      - key: Content-Type
+        value: application/json
+    method: PUT
+    disableCallback: true
+    name: update_change_feed
+    retryCount: 3
+    uriTemplate: https://mklog.makelog.io/api/v1/changes/environment
+  - bodyTemplate:
+      inline: |-
         { "event_type": "webhookCallback", "client_payload": {
             "callbackUri": "{{armory.callbackUri}}/callback"
             }
@@ -172,27 +189,18 @@ webhooks: #Webhooks can be used to run external automation.
     uriTemplate: https://api.github.com/repos/{{secrets.github_org}}/{{secrets.github_repository}}/dispatches
     disableCallback: false
   - bodyTemplate:
-      inline: |-
-        {
-        "locator": {
-          "pull_request": {
-            "merge_commit_sha": "{{context.GITHUB_SHA}}"
-          }
-        },
-        "data": {
-          "environment": "{{armory.environmentName}}",
-          "environmentUrl": "{{armory.preview.potato-facts-internal}}"
-        }
-        }
-    headers:
-      - key: Authorization
-        value: Bearer {{secrets.makelog-token}}
-      - key: Content-Type
-        value: application/json
-    method: PUT
+      inline: '{ "status_url": "https://console.cloud.armory.io/deployments/{{armory.deploymentId}}", "message": "Deployment of {{armory.applicationName}} to {{armory.environmentName}} is starting." }'
     disableCallback: true
-    name: update_change_feed
+    method: POST
+    name: Send_Slack_Deployment_Starting
     retryCount: 3
-    uriTemplate: https://mklog.makelog.io/api/v1/changes/environment
+    uriTemplate: '{{secrets.slackwebhookURL}}'
+  - bodyTemplate:
+      inline: '{ "status_url": "https://console.cloud.armory.io/deployments/{{armory.deploymentId}}", "message": "Deployment of {{armory.applicationName}} to {{armory.environmentName}} is complete." }'
+    disableCallback: true
+    method: POST
+    name: Send_Slack_Deployment_Complete
+    retryCount: 3
+    uriTemplate: '{{secrets.slackwebhookURL}}'
 
 
