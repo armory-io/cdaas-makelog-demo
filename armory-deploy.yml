@@ -64,8 +64,6 @@ strategies: #This section defines the strategies environments can use to deploy.
       shutDownOldVersionAfter:
         - pause:
             untilApproved: true
-        - runWebhook:
-            name: Check_Logs
         - analysis:
             interval: 10
             numberOfJudgmentRuns: 1
