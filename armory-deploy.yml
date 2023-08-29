@@ -10,8 +10,6 @@ targets: #This section defines the targets to which you are deploying, and their
       afterDeployment:
         - runWebhook:
             name: update_change_feed
-        - runWebhook:
-            name: Integration_Tests
     namespace: borealis-staging
     strategy: staging_strategy
   production:
