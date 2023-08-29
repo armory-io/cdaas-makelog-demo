@@ -10,6 +10,8 @@ targets: #This section defines the targets to which you are deploying, and their
       afterDeployment:
         - runWebhook:
             name: update_change_feed
+        - runWebhook:
+            name: Integration_Tests
     namespace: borealis-staging
     strategy: staging_strategy
   production:
@@ -202,7 +204,5 @@ webhooks: #Webhooks can be used to run external automation.
     name: Send_Slack_Deployment_Complete
     retryCount: 3
     uriTemplate: '{{secrets.slackwebhookURL}}'
-
-
 
 
