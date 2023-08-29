@@ -203,4 +203,3 @@ webhooks: #Webhooks can be used to run external automation.
     retryCount: 3
     uriTemplate: '{{secrets.slackwebhookURL}}'
 
-
