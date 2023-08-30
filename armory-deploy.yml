@@ -12,7 +12,7 @@ targets: #This section defines the targets to which you are deploying, and their
             name: update_change_feed
     namespace: borealis-staging
     strategy: staging_strategy
-  production:
+  prod:
     account: demo-prod-eu-cluster
     constraints:
       afterDeployment:
