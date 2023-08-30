@@ -202,4 +202,3 @@ webhooks: #Webhooks can be used to run external automation.
     uriTemplate: '{{secrets.slackwebhookURL}}'
 
 
-
